@@ -94,37 +94,37 @@ class JobOrderController extends AppBaseController
     {
         $jobOrder = JobOrder::find($id);
         // locate a user (or ANY MODEL that implementes the AccountingJournal trait)
-        $current_balance = $jobOrder->journal->transactions;
-        dd($current_balance);
+        // $current_balance = $jobOrder->journal->transactions;
+        // dd($current_balance);
          // locate a product (optional)
-         $product = Invoices::find(5);
+        //  $product = Invoices::find(5);
 
          // init a journal for this user (do this only once)
          // $jobOrder->initJournal();
 
          // credit the user and reference the product
-         $transaction_1 = $jobOrder->journal->creditDollars(100);
-         $transaction_1->referencesObject($product);
+        //  $transaction_1 = $jobOrder->journal->creditDollars(100);
+        //  $transaction_1->referencesObject($product);
 
-         // check our balance (should be 100)
-         $current_balance = $jobOrder->journal->getCurrentBalanceInDollars();
+        //  // check our balance (should be 100)
+        //  $current_balance = $jobOrder->journal->getCurrentBalanceInDollars();
 
-         // debit the user
-         $transaction_2 = $jobOrder->journal->debitDollars(75);
+        //  // debit the user
+        //  $transaction_2 = $jobOrder->journal->debitDollars(75);
 
-         // check our balance (should be 25)
-         $current_balance2 = $jobOrder->journal->getCurrentBalanceInDollars();
+        //  // check our balance (should be 25)
+        //  $current_balance2 = $jobOrder->journal->getCurrentBalanceInDollars();
 
-         //get the product referenced in the journal (optional)
-         $product_copy = $transaction_1->getReferencedObject();
-         dd($current_balance,$current_balance2,$product_copy);
+        //  //get the product referenced in the journal (optional)
+        //  $product_copy = $transaction_1->getReferencedObject();
+        //  dd($current_balance,$current_balance2,$product_copy);
       // $this->company_expense_ledger = Ledger::create([
      //     'name' => 'Company Expenses',
      //     'type' => 'expense'
      // ]);
 // $this->company_ar_journal = Account::create(['name' => 'Company Accounts Receivable'])->initJournal();
      // $this->company_ar_journal->assignToLedger($this->company_assets_ledger);
-        $jobOrder = $this->jobOrderRepository->find($id);
+        // $jobOrder = $this->jobOrderRepository->find($id);
 
         if (empty($jobOrder)) {
             Flash::error(__('messages.not_found', ['model' => __('models/jobOrders.singular')]));

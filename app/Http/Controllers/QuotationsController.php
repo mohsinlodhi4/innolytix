@@ -60,6 +60,9 @@ class QuotationsController extends AppBaseController
      */
     public function store(CreateQuotationsRequest $request)
     {
+        $request->validate([
+            'date'=>'required',
+        ]);
         $input = $request->all();
         $products=$input['product'];
         unset($input['product']);
@@ -79,7 +82,7 @@ class QuotationsController extends AppBaseController
             }
         }
         $input['tax'] = $total_tax;
-        $tax=(int) ($total_tax/100)*$subtotal;
+        $tax=($total_tax/100)*$subtotal;
         $input['grand_total']=$subtotal+$tax-$discount;
         $quotations = $this->quotationsRepository->create($input);
         if($quotations){
@@ -135,7 +138,9 @@ class QuotationsController extends AppBaseController
             return redirect(route('quotations.index'));
         }
 
-        return view('quotations.edit')->with('quotations', $quotations);
+        return view('quotations.edit')->with('quotations', $quotations)->with('clients',Clients::all())
+        ->with('officedetails',OfficeDetails::all())
+        ->with('taxs',Tax::all())->with('vendors',Vendor::all());
     }
 
     /**

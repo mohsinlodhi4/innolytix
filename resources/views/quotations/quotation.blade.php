@@ -519,14 +519,14 @@
                       <table class="inventory">
                           <thead>
                               <tr>
-                                  <th style="width:10% !important"><span>No</span></th>
+                                  <th style="width:8% !important"><span>No</span></th>
                                   <th style="width:15% !important"><span>Name</span></th>
-                                  <th style="width:65% !important"><span>Description</span></th>
-                                  <th style="width:10% !important"><span>Model</span></th>
-                                  <th style="width:10% !important"><span>Brand</span></th>
-                                  <th style="width:10% !important"><span>Unit Price</span></th>
-                                  <th style="width:10% !important"><span>Qty</span></th>
-                                  <th style="width:10% !important"><span>Total</span></th>
+                                  <th style="width:45% !important"><span>Description</span></th>
+                                  <th style="width:15% !important"><span>Model</span></th>
+                                  <th style="width:15% !important"><span>Brand</span></th>
+                                  <th style="width:15% !important"><span>Unit Price</span></th>
+                                <th style="width:15% !important"><span>Qty</span></th>
+                                  <th style="width:15% !important"><span>Total</span></th>
                               </tr>
                           </thead>
                           <tbody>

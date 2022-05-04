@@ -436,8 +436,12 @@
 
                             </td>
                             <td style="border: none !important; text-align:right">
+                                @if($pay->cheque_ref)
                                 <span>Cheque Ref: </span><span style="text-decoration: underline; text-align:right; ">{{@$pay->cheque_ref}}</span><br>
+                                @endif
+                                @if($pay->cheque_date)
                                 <span>Cheque Date: </span><span style="text-decoration: underline; text-align:right; ">{{@$pay->cheque_date}}</span><br>
+                                @endif
                             </td>
                         </tr>
                     </table>
@@ -465,16 +469,12 @@
                                   <td  style="text-align:center;"></td>
                               </tr>
                               
-                              <?php
-                              $total_credit = $pay->amount;
-                              ?>
                               @foreach($pay->taxes as $t)
                               <?php
                               $tax_amount = round(($pay->amount*$t->tax->percent)/100);
-                              $total_credit += $tax_amount;
                               ?>
                               <tr>
-                                  <td  style="text-align:center;">{{$pay->account->id+3}}</td>
+                                  <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;">{{$t->tax->title." ".$t->tax->percent."%"}}</td>
                                   <td  style="text-align:center;">{{$pay->description != 0 ?$pay->description : ''}}</td>
                                   <td  style="text-align:center;"></td>
@@ -484,12 +484,12 @@
 
                               @endforeach
                               <tr>
-                                  <td  style="text-align:center;">{{$pay->account->id}}</td>
+                                  <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;">{{$pay->account->name}}</td>
                                   <td  style="text-align:center;">{{$pay->description != 0 ?$pay->description : ''}}</td>
                                   <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;"></td>
-                                  <td  style="text-align:center;">{{$total_credit}}</td>
+                                  <td  style="text-align:center;">{{$pay->grand_total}}</td>
                               </tr>
 
                               <tr style="margin-top:15px">
@@ -497,8 +497,8 @@
                                   <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;">Total</td>
                                   <td  style="text-align:center;"></td>
-                                  <td  style="text-align:center;">{{$total_credit}}</td>
-                                  <td  style="text-align:center;">{{$total_credit}}</td>
+                                  <td  style="text-align:center;">{{$pay->grand_total}}</td>
+                                  <td  style="text-align:center;">{{$pay->grand_total}}</td>
                               </tr>
                           </tbody>
                           <?php
@@ -512,9 +512,9 @@
                   <table class="inventory">
                           <tbody>
                               <tr>
-                                  <td  style="text-align:center; padding: 5px;">{{$pay->account->id}}</td>
-                                  <td  style="text-align:center;width:70%">{{amountInWords($total_credit)}}</td>
-                                  <td  style="text-align:center;">{{$total_credit}}</td>
+                                  <td  style="text-align:center; padding: 5px;">Amount In Words</td>
+                                  <td  style="text-align:center;width:70%">{{amountInWords($pay->grand_total)}}</td>
+                                  <td  style="text-align:center;">{{$pay->grand_total}}</td>
                               </tr>
                              
                           </tbody>

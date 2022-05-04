@@ -2,6 +2,9 @@
 
 namespace App\DataTables;
 
+use App\Models\Banks;
+use App\Models\User;
+use App\Models\Account;
 use App\Models\Generalvoucher;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
@@ -19,7 +22,20 @@ class GeneralvoucherDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'generalvouchers.datatables_actions');
+        return $dataTable->addColumn('action', 'generalvouchers.datatables_actions')
+        ->editColumn('credit_account',function($id){
+            return optional(Account::find($id->credit_account))->name ?? null;
+        })
+        ->editColumn('dabit_account',function($id){
+            return optional(Account::find($id->dabit_account))->name ?? null;
+        })
+        ->editColumn('created_by',function($id){
+            return optional(User::find($id->created_by))->name ?? null;
+        })
+        ->editColumn('created_at',function($id){
+            return date('Y-m-d', strtotime($id->created_at));
+        })
+        ;
     }
 
     /**
@@ -89,6 +105,7 @@ class GeneralvoucherDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            'created_at' => new Column(['title' => __('models/generalvouchers.fields.created_at'), 'data' => 'created_at']),
             'credit_account' => new Column(['title' => __('models/generalvouchers.fields.credit_account'), 'data' => 'credit_account']),
             'dabit_account' => new Column(['title' => __('models/generalvouchers.fields.dabit_account'), 'data' => 'dabit_account']),
             'amount' => new Column(['title' => __('models/generalvouchers.fields.amount'), 'data' => 'amount']),

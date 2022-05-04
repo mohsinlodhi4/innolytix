@@ -21,6 +21,9 @@
     {!! Form::label('unique_id', __('models/jobOrders.fields.unique_id').':') !!}
     {!! Form::text('unique_id', null, ['class' => 'form-control']) !!}
 </div>
+<div class="form-group col-sm-3 p-4">
+    <button class="btn btn-primary rounded" id="generate">Generate</button>
+</div>
 
 @push('page_scripts')
 <script>
@@ -36,6 +39,14 @@
     }
     return a.join("");
 }
-    $('input[name=unique_id').val(Date.now().toString().shuffle());
+    // let old_id = Date.now().toString().shuffle();
+    let id = Math.random().toString(16).slice(2).toUpperCase();
+    $('input[name=unique_id').val(id);
+    $("#generate").click((e)=>{
+        e.preventDefault();
+        id = Math.random().toString(16).slice(2).toUpperCase();
+        $('input[name=unique_id').val(id);
+
+    })
 </script>
 @endpush

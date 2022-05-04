@@ -68,6 +68,12 @@ class PaymentvoucherController extends AppBaseController
      */
     public function store(CreatePaymentvoucherRequest $request)
     {
+        $request->validate([
+            'bank_account'=>'required',
+            'dabit_account'=>'required',
+            'cheque_date'=>'required',
+            'amount'=>'required',
+        ]);
         $input = $request->all();
         $bank=Banks::find($input['bank_account']);
         $account=Account::find($input['dabit_account']);
@@ -85,8 +91,22 @@ class PaymentvoucherController extends AppBaseController
         $input['created_by']=Auth::id();
 
         $input['ref'] = random_strings()."/".date('m/d');
+        $input['grand_total'] = $input['amount'];
+        if(isset($input['tax_id'])){
+            $taxes = $input['tax_id'];
+            foreach($taxes as $t){
+                $input['grand_total'] += round($input['amount'] * (Tax::find($t)->percent)/100);
+            }
+            $input['tax_id'] = 1;
+        }
+
 
         $paymentvoucher = $this->paymentvoucherRepository->create($input);
+        if(isset($taxes)){
+            foreach($taxes as $t){
+                $paymentvoucher->taxes()->create(['tax_id'=>$t]);
+            }
+        }
 
         Flash::success(__('messages.saved', ['model' => __('models/paymentvouchers.singular')]));
 

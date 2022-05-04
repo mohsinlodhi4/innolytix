@@ -34,6 +34,10 @@ class Reciptvoucher extends Model
         'credit_account',
         'description',
         'amount',
+        'cheque_ref',
+        'cheque_date',
+        'ref',
+        'grand_total',
         'created_by',
         'vendor_id',
         'tax_id',
@@ -51,7 +55,6 @@ class Reciptvoucher extends Model
         'credit_account' => 'integer',
         'description' => 'string',
         'amount' => 'integer',
-        'created_by' => 'integer'
     ];
 
     protected $appends = ['bank'];

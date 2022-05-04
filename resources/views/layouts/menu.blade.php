@@ -332,7 +332,7 @@ if($isinvoicescreate||$isinvoiceproduct){
 <li class="nav-item">
     <a href="{{ route('trialbalance') }}"
        class="nav-link {{ Request::is('ledgers*') ? 'active' : '' }}">
-        <p>Trial Balance)</p>
+        <p>Trial Balance</p>
     </a>
 </li>
 <li class="nav-item">

@@ -3,6 +3,9 @@
 namespace App\DataTables;
 
 use App\Models\Paymentvoucher;
+use App\Models\Banks;
+use App\Models\User;
+use App\Models\Account;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Column;
@@ -19,7 +22,21 @@ class PaymentvoucherDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'paymentvouchers.datatables_actions');
+        return $dataTable->addColumn('action', 'paymentvouchers.datatables_actions')
+        ->editColumn('bank_account',function($id){
+            $bank = Banks::find($id->bank_account);
+            return $bank->bank_name." - ". $bank->account_title;
+        })
+        ->editColumn('dabit_account',function($id){
+            return optional(Account::find($id->dabit_account))->name ?? null;
+        })
+        ->editColumn('created_by',function($id){
+            return optional(User::find($id->created_by))->name ?? null;
+        })
+        ->editColumn('created_at',function($id){
+            return date('Y-m-d', strtotime($id->created_at));
+        })
+        ;
     }
 
     /**
@@ -89,6 +106,7 @@ class PaymentvoucherDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            'created_at' => new Column(['title' => 'Created At', 'data' => 'created_at']),
             'bank_account' => new Column(['title' => __('models/paymentvouchers.fields.bank_account'), 'data' => 'bank_account']),
             'dabit_account' => new Column(['title' => __('models/paymentvouchers.fields.dabit_account'), 'data' => 'dabit_account']),
             'description' => new Column(['title' => __('models/paymentvouchers.fields.description'), 'data' => 'description']),

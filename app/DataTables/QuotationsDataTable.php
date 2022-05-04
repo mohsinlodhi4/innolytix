@@ -37,6 +37,16 @@ class QuotationsDataTable extends DataTable
             return $id->tax . '%';
         })->editColumn('discount', function($id) {
             return $id->discount . '%';
+        })
+        ->editColumn('created_at', function($date){
+            $data = json_decode($date);
+            $date = date('Y-m-d', strtotime($data->created_at));
+            return $date;
+        })
+        ->editColumn('date', function($date){
+            $data = json_decode($date);
+            $date = date('Y-m-d', strtotime($data->date));
+            return $date;
         });
     }
 
@@ -107,6 +117,7 @@ class QuotationsDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            'created_at' => new Column(['title' => 'Created At', 'data' => 'created_at']),
             'client_id' => new Column(['title' => __('models/quotations.fields.client_id'), 'data' => 'client_id']),
             'officedetails_id' => new Column(['title' => __('models/quotations.fields.officedetails_id'), 'data' => 'officedetails_id']),
             'created_by' => new Column(['title' => __('models/quotations.fields.created_by'), 'data' => 'created_by']),

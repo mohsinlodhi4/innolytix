@@ -59,7 +59,7 @@
 <!-- Tax Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('tax_id', __('models/paymentvouchers.fields.tax').':') !!}
-    <select name="tax_id" id="tax_id" class="form-control">
+    <select name="tax_id[]" id="tax_id" class="form-control" multiple>
         <option value=""></option>
         @foreach($taxs as $t)
             <option value="{{$t->id}}">{{$t->title." ". $t->percent."%"}}</option>

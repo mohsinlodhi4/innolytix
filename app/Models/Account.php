@@ -27,4 +27,8 @@ class Account extends Model
     public function getCurrentBalanceAttribute(){
         return $this->journal->getCurrentBalanceInDollars();
     }
+
+    public function bank(){
+        return $this->belongsTo(Banks::class, 'type_id');
+    }
 }

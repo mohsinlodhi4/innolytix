@@ -34,6 +34,10 @@ class Paymentvoucher extends Model
         'dabit_account',
         'description',
         'amount',
+        'cheque_ref',
+        'cheque_date',
+        'ref',
+        'grand_total',
         'created_by',
         'vendor_id',
         'tax_id',
@@ -49,9 +53,7 @@ class Paymentvoucher extends Model
         'id' => 'integer',
         'bank_account' => 'integer',
         'dabit_account' => 'integer',
-        'description' => 'integer',
         'amount' => 'integer',
-        'created_by' => 'integer'
     ];
 
     /**
@@ -68,6 +70,9 @@ class Paymentvoucher extends Model
     }
     public function bank(){
         return $this->belongsTo(Banks::class, 'bank_account');
+    }
+    public function taxes(){
+        return $this->morphMany(VoucherTax::class,'voucher');
     }
     
 }

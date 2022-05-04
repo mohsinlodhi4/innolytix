@@ -51,6 +51,12 @@ class ClientsController extends AppBaseController
      */
     public function store(CreateClientsRequest $request)
     {
+        $request->validate([
+           'name'=>'required', 
+           'phone'=>'required', 
+           'ntn_no'=>'required', 
+           'srtn_no'=>'required', 
+        ]);
         $input = $request->all();
 
         $clients = $this->clientsRepository->create($input);

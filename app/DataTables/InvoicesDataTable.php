@@ -19,7 +19,13 @@ class InvoicesDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'invoices.datatables_actions');
+        return $dataTable->addColumn('action', 'invoices.datatables_actions')
+        ->editColumn('joborder_id', function($id){
+            return JobOrder::find($id)->unique_id;
+        })
+        ->editColumn('created_at', function($date){
+            return $date->toDateString();
+        });
     }
 
     /**
@@ -91,7 +97,7 @@ class InvoicesDataTable extends DataTable
         return [
             'date' => new Column(['title' => __('models/invoices.fields.date'), 'data' => 'date']),
             'subject' => new Column(['title' => __('models/invoices.fields.subject'), 'data' => 'subject']),
-            'joborder_id' => new Column(['title' => __('models/invoices.fields.joborder_id'), 'data' => 'joborder_id']),
+            'joborder_id' => new Column(['title' => 'Joborder', 'data' => 'joborder_id']),
             'officedetails_id' => new Column(['title' => __('models/invoices.fields.officedetails_id'), 'data' => 'officedetails_id']),
             'sub_total' => new Column(['title' => __('models/invoices.fields.sub_total'), 'data' => 'sub_total']),
             'discount' => new Column(['title' => __('models/invoices.fields.discount'), 'data' => 'discount']),

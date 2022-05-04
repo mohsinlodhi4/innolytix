@@ -2,6 +2,9 @@
 
 namespace App\DataTables;
 
+use App\Models\Banks;
+use App\Models\User;
+use App\Models\Account;
 use App\Models\Reciptvoucher;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
@@ -19,7 +22,25 @@ class ReciptvoucherDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'reciptvouchers.datatables_actions');
+        return $dataTable->addColumn('action', 'reciptvouchers.datatables_actions')
+        ->editColumn('bank_account',function($id){
+            $bank = Account::find($id->bank_account);
+            if($bank){
+            $bank = $bank->bank;
+                return $bank->bank_name." - ". $bank->account_title;
+            }
+            return $id->bank_account;
+        })
+        ->editColumn('credit_account',function($id){
+            return optional(Account::find($id->credit_account))->name ?? null;
+        })
+        ->editColumn('created_by',function($id){
+            return optional(User::find($id->created_by))->name ?? null;
+        })
+        ->editColumn('created_at',function($id){
+            return date('Y-m-d', strtotime($id->created_at));
+        })
+        ;
     }
 
     /**
