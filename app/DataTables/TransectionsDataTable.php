@@ -3,6 +3,11 @@
 namespace App\DataTables;
 
 use App\Models\Transections;
+use App\Models\Banks;
+use App\Models\User;
+use App\Models\Account;
+use App\Models\JobOrder;
+
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Column;
@@ -19,7 +24,24 @@ class TransectionsDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'transections.datatables_actions');
+        return $dataTable->addColumn('action', 'transections.datatables_actions')
+        ->editColumn('created_at',function($id){
+            return date('Y-m-d', strtotime($id->created_at));
+        })
+        ->editColumn('joborder_id',function($id){
+            return optional(JobOrder::find($id->joborder_id))->unique_id ?? null;
+        })
+        ->editColumn('bank_id',function($id){
+            $bank = Banks::find($id->bank_id);
+            if($bank){
+                return $bank->bank_name." - ". $bank->account_title;
+            }
+            return $id->bank_id;
+        })
+        ->editColumn('created_by',function($id){
+            return optional(User::find($id->created_by))->name ?? null;
+        })
+        ;
     }
 
     /**
@@ -89,6 +111,7 @@ class TransectionsDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            'created_at' => new Column(['title' => __('models/transections.fields.created_at'), 'data' => 'created_at']),
             'joborder_id' => new Column(['title' => __('models/transections.fields.joborder_id'), 'data' => 'joborder_id']),
             'title' => new Column(['title' => __('models/transections.fields.title'), 'data' => 'title']),
             'description' => new Column(['title' => __('models/transections.fields.description'), 'data' => 'description']),

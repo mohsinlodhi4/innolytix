@@ -6,7 +6,9 @@ use App\DataTables\TransectionsDataTable;
 use App\Http\Requests;
 use App\Http\Requests\CreateTransectionsRequest;
 use App\Http\Requests\UpdateTransectionsRequest;
+use App\Models\User;
 use App\Models\Banks;
+use App\Models\Account;
 use App\Models\JobOrder;
 use App\Models\OfficeDetails;
 use App\Models\Tax;
@@ -16,6 +18,8 @@ use App\Repositories\TransectionsRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
+
+use Illuminate\Validation\ValidationException;
 
 class TransectionsController extends AppBaseController
 {
@@ -63,9 +67,29 @@ class TransectionsController extends AppBaseController
      */
     public function store(CreateTransectionsRequest $request)
     {
+        $request->validate([
+            'bank_id'=>'required',
+            'type'=>'required',
+            'amount'=>'required',
+        ]);
         $input = $request->all();
         $input['created_by']=Auth::id();
+        // Transaction Journal Entry
+        $bank_account = Account::where([
+            ['type','bank'],
+            ['type_id',$input['bank_id']],
+        ])->first();
+        if(!$bank_account){
+            throw ValidationException::withMessages(['Bank_Account' => 'This Account Does not Exist']);
+        }
+        if($input['type'] == 'recieved'){
+            $transaction_1 = $bank_account->journal->creditDollars($input['amount']);
+        }else{
+            $transaction_1 = $bank_account->journal->debitDollars($input['amount']);
+        }
+        // Transaction Journal Entry End
         $transections = $this->transectionsRepository->create($input);
+
 
         Flash::success(__('messages.saved', ['model' => __('models/transections.singular')]));
 
@@ -88,8 +112,14 @@ class TransectionsController extends AppBaseController
 
             return redirect(route('transections.index'));
         }
-
-        return view('transections.show')->with('transections', $transections);
+        $transections = $transections->toArray();
+        $transections['joborder_id'] = optional(JobOrder::find($transections['joborder_id']))->unique_id ?? null;
+        $bank = Banks::find($transections['bank_id']);
+        if($bank){
+            $transections['bank_id'] = $bank->bank_name." - ". $bank->account_title;
+        }
+        $transections['created_by'] = optional(User::find($transections['created_by']))->name;
+        return view('transections.show')->with('transections', (object)$transections);
     }
 
     /**

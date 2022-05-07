@@ -1,8 +1,8 @@
 <?php
 
 return array (
-  'singular' => 'Transections',
-  'plural' => 'Transections',
+  'singular' => 'Transaction',
+  'plural' => 'Transactions',
   'fields' => 
   array (
     'id' => 'Id',

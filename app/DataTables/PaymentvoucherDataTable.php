@@ -26,7 +26,10 @@ class PaymentvoucherDataTable extends DataTable
         return $dataTable->addColumn('action', 'paymentvouchers.datatables_actions')
         ->editColumn('bank_account',function($id){
             $bank = Banks::find($id->bank_account);
-            return $bank->bank_name." - ". $bank->account_title;
+            if($bank){
+                return $bank->bank_name." - ". $bank->account_title;
+            }
+            return $id->bank_account;
         })
         ->editColumn('dabit_account',function($id){
             return optional(Account::find($id->dabit_account))->name ?? null;
