@@ -3,6 +3,10 @@
 namespace App\DataTables;
 
 use App\Models\PurchaseOrder;
+use App\Models\Banks;
+use App\Models\User;
+use App\Models\Account;
+use App\Models\JobOrder;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Column;
@@ -19,7 +23,13 @@ class PurchaseOrderDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'purchase_orders.datatables_actions');
+        return $dataTable->addColumn('action', 'purchase_orders.datatables_actions')
+        ->editColumn('created_at',function($id){
+            return date('Y-m-d', strtotime($id->created_at));
+        })
+        ->editColumn('joborder_id',function($id){
+            return optional(JobOrder::find($id->joborder_id))->unique_id ?? null;
+        });
     }
 
     /**
@@ -89,6 +99,7 @@ class PurchaseOrderDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            'created_at' => new Column(['title' => 'Created At', 'data' => 'created_at']),
             'joborder_id' => new Column(['title' => __('models/purchaseOrders.fields.joborder_id'), 'data' => 'joborder_id']),
             'vendor_id' => new Column(['title' => __('models/purchaseOrders.fields.vendor_id'), 'data' => 'vendor_id']),
             'officedetail_id' => new Column(['title' => __('models/purchaseOrders.fields.officedetail_id'), 'data' => 'officedetail_id']),

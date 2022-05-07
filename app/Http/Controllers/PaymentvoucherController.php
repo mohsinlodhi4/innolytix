@@ -82,15 +82,7 @@ class PaymentvoucherController extends AppBaseController
             ['type','bank'],
             ['type_id',$bank->id],
         ])->first();
-        $transaction_group = AccountingService::newDoubleEntryTransactionGroup();
-        $transaction_group->addDollarTransaction($account->journal, 'debit', $input['amount'],$input['description']);
-        $transaction_group->addDollarTransaction($bank_account->journal, 'credit', $input['amount'],$input['description']);
-        // $transaction_group->addDollarTransaction($account->journal, 'credit', $input['amount'],$input['description']);
-        // $transaction_group->addDollarTransaction($bank_account->journal, 'debit', $input['amount'],$input['description']);
-        $transaction_group_uuid = $transaction_group->commit();
-        $input['created_by']=Auth::id();
-
-        $input['ref'] = random_strings()."/".date('m/d');
+        // Tax
         $input['grand_total'] = $input['amount'];
         if(isset($input['tax_id'])){
             $taxes = $input['tax_id'];
@@ -99,6 +91,17 @@ class PaymentvoucherController extends AppBaseController
             }
             $input['tax_id'] = 1;
         }
+        // Tax End
+        $transaction_group = AccountingService::newDoubleEntryTransactionGroup();
+        $transaction_group->addDollarTransaction($account->journal, 'debit', $input['grand_total'],$input['description']);
+        $transaction_group->addDollarTransaction($bank_account->journal, 'credit', $input['grand_total'],$input['description']);
+        // $transaction_group->addDollarTransaction($account->journal, 'credit', $input['amount'],$input['description']);
+        // $transaction_group->addDollarTransaction($bank_account->journal, 'debit', $input['amount'],$input['description']);
+        $transaction_group_uuid = $transaction_group->commit();
+        $input['created_by']=Auth::id();
+
+        $input['ref'] = random_strings()."/".date('m/d');
+        
 
 
         $paymentvoucher = $this->paymentvoucherRepository->create($input);

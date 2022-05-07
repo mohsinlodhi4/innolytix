@@ -57,6 +57,15 @@ class BanksController extends AppBaseController
      */
     public function store(CreateBanksRequest $request)
     {
+        $request->validate([
+            'bank_name'=>'required',
+            'branch'=>'required',
+            'account_title'=>'required',
+            'account_no'=>'required',
+            'iban'=>'required',
+            'opening_balance'=>'required',
+        ]);
+
         $input = $request->all();
         $input['created_by']=Auth::id();
 

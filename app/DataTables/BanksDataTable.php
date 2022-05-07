@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\Banks;
+use App\Models\User;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Column;
@@ -19,7 +20,9 @@ class BanksDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'banks.datatables_actions');
+        return $dataTable->addColumn('action', 'banks.datatables_actions')->editColumn('created_by',function($data){
+            return User::find($data->created_by)->name ?? '';
+        });
     }
 
     /**

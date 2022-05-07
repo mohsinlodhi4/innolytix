@@ -3,6 +3,8 @@
 namespace App\DataTables;
 
 use App\Models\JobOrder;
+use App\Models\Clients;
+use App\Models\User;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Column;
@@ -19,7 +21,17 @@ class JobOrderDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'job_orders.datatables_actions');
+        return $dataTable->addColumn('action', 'job_orders.datatables_actions')
+        ->editColumn('created_at',function($data){
+            return $data->created_at->toDateString();
+        })
+        ->editColumn('client_id',function($data){
+            return Clients::find($data->client_id)->name ?? '';
+        })
+        ->editColumn('created_by',function($data){
+            return User::find($data->created_by)->name ?? '';
+        })
+        ;
     }
 
     /**
@@ -89,7 +101,8 @@ class JobOrderDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'client_id' => new Column(['title' => __('models/jobOrders.fields.client_id'), 'data' => 'client_id']),
+            'created_at' => new Column(['title' => __('models/jobOrders.fields.created_at'), 'data' => 'created_at']),
+            'client_id' => new Column(['title' => 'Client', 'data' => 'client_id']),
             'title' => new Column(['title' => __('models/jobOrders.fields.title'), 'data' => 'title']),
             'unique_id' => new Column(['title' => __('models/jobOrders.fields.unique_id'), 'data' => 'unique_id']),
             'created_by' => new Column(['title' => __('models/jobOrders.fields.created_by'), 'data' => 'created_by'])

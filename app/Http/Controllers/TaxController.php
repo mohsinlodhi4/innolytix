@@ -53,6 +53,10 @@ class TaxController extends AppBaseController
      */
     public function store(CreateTaxRequest $request)
     {
+        $request->validate([
+            'title'=>'required',
+            'percent'=>'required',
+        ]);
         $input = $request->all();
         $input['created_by']=Auth::id();
         $tax = $this->taxRepository->create($input);

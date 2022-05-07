@@ -54,6 +54,9 @@ class VendorController extends AppBaseController
      */
     public function store(CreateVendorRequest $request)
     {
+        $request->validate([
+            'name'=>'required',
+        ]);
         $input = $request->all();
         $input['user_id']=Auth::id();
         // $vendor = $this->vendorRepository->create($input);

@@ -33,12 +33,18 @@
             color: red;
             padding-left: 5px;
         }
+        .login-logo a b{
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: aliceblue;
+        }
     </style>
     @stack('page_css')
 
 </head>
 
-<body style="background-image: url({{asset('images/background/backinno.jpg')}});   background-repeat: no-repeat;   background-size: 100% 100%;">
+<!-- <body style="background-image: url({{asset('images/background/backinno.jpg')}});   background-repeat: no-repeat;   background-size: 100% 100%;"> -->
+<body style="background: royalblue;">
     {{--  --}}
     <div class="col d-flex justify-content-center">
 

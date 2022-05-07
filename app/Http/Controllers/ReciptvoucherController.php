@@ -72,16 +72,7 @@ class ReciptvoucherController extends AppBaseController
         // dd($input);
         $bank=Account::find($input['bank_account']);
         $account=Account::find($input['credit_account']);
-        // $bank->journal;
-        // $account->journal
-        $transaction_group = AccountingService::newDoubleEntryTransactionGroup();
-        $transaction_group->addDollarTransaction($bank->journal, 'debit', $input['amount'],$input['description']);
-        $transaction_group->addDollarTransaction($account->journal, 'credit', $input['amount'],$input['description']);
-        $transaction_group_uuid = $transaction_group->commit();
-        $input['created_by']=Auth::id();
-
-        $input['ref'] = random_strings()."/".date('m/d');
-
+        // Tax 
         $input['grand_total'] = $input['amount'];
         if(isset($input['tax_id'])){
             $taxes = $input['tax_id'];
@@ -90,6 +81,14 @@ class ReciptvoucherController extends AppBaseController
             }
             $input['tax_id'] = 1;
         }
+        // Tax End
+        $transaction_group = AccountingService::newDoubleEntryTransactionGroup();
+        $transaction_group->addDollarTransaction($bank->journal, 'debit', $input['grand_total'],$input['description']);
+        $transaction_group->addDollarTransaction($account->journal, 'credit', $input['grand_total'],$input['description']);
+        $transaction_group_uuid = $transaction_group->commit();
+        $input['created_by']=Auth::id();
+
+        $input['ref'] = random_strings()."/".date('m/d');
 
         $reciptvoucher = $this->reciptvoucherRepository->create($input);
         if(isset($taxes)){

@@ -53,6 +53,13 @@ class OfficeDetailsController extends AppBaseController
      */
     public function store(CreateOfficeDetailsRequest $request)
     {
+        $request->validate([
+            'name'=>'required',
+            'address'=>'required',
+            'phone'=>'required',
+            'ntn_no'=>'required',
+            'strn_no'=>'required',
+        ]);
         $input = $request->all();
         $input['created_by']=Auth::id();
         $officeDetails = $this->officeDetailsRepository->create($input);

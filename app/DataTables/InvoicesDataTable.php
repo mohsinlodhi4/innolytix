@@ -3,6 +3,8 @@
 namespace App\DataTables;
 
 use App\Models\Invoices;
+use App\Models\JobOrder;
+use App\Models\OfficeDetails;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Column;
@@ -21,11 +23,18 @@ class InvoicesDataTable extends DataTable
 
         return $dataTable->addColumn('action', 'invoices.datatables_actions')
         ->editColumn('joborder_id', function($id){
-            return JobOrder::find($id)->unique_id;
+            return JobOrder::find($id->joborder_id)->unique_id;
         })
-        ->editColumn('created_at', function($date){
-            return $date->toDateString();
-        });
+        ->editColumn('officedetails_id', function($data){
+            return OfficeDetails::find($data->officedetails_id)->name ?? '';
+        })
+        ->editColumn('date', function($data){
+            return $data->date->toDateString();
+        })
+        // ->editColumn('created_at', function($date){
+        //     return $date->toDateString();
+        // })
+        ;
     }
 
     /**

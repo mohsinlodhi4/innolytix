@@ -59,8 +59,12 @@ class JobOrderController extends AppBaseController
      */
     public function store(CreateJobOrderRequest $request)
     {
+        $request->validate([
+            'client_id'=>'required',
+            'title'=>'required',
+            'unique_id'=>'required',
+        ]);
 
-        // dd($ledger);
         $input = $request->all();
         $input['created_by']=Auth::id();
         $jobOrder = JobOrder::create($input);
@@ -152,7 +156,7 @@ class JobOrderController extends AppBaseController
             return redirect(route('jobOrders.index'));
         }
 
-        return view('job_orders.edit')->with('jobOrder', $jobOrder);
+        return view('job_orders.edit')->with('jobOrder', $jobOrder)->with('clients',Clients::get());
     }
 
     /**

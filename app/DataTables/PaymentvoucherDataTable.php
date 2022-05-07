@@ -6,6 +6,7 @@ use App\Models\Paymentvoucher;
 use App\Models\Banks;
 use App\Models\User;
 use App\Models\Account;
+use App\Models\JobOrder;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Column;
@@ -35,6 +36,9 @@ class PaymentvoucherDataTable extends DataTable
         })
         ->editColumn('created_at',function($id){
             return date('Y-m-d', strtotime($id->created_at));
+        })
+        ->editColumn('joborder_id',function($id){
+            return optional(JobOrder::find($id->joborder_id))->unique_id ?? null;
         })
         ;
     }
@@ -107,6 +111,7 @@ class PaymentvoucherDataTable extends DataTable
     {
         return [
             'created_at' => new Column(['title' => 'Created At', 'data' => 'created_at']),
+            'joborder_id' => new Column(['title' => 'Job Order Id', 'data' => 'joborder_id']),
             'bank_account' => new Column(['title' => __('models/paymentvouchers.fields.bank_account'), 'data' => 'bank_account']),
             'dabit_account' => new Column(['title' => __('models/paymentvouchers.fields.dabit_account'), 'data' => 'dabit_account']),
             'description' => new Column(['title' => __('models/paymentvouchers.fields.description'), 'data' => 'description']),
