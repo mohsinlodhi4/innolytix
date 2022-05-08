@@ -23,6 +23,29 @@ $grand_credit = 0;
                     </button>
                 </div>
             </div>
+            <div class="row p-2 mt-2">
+            <!-- Filter From Start -->
+        <form class="col-12" action="{{route('trialbalance')}}" id="filterForm" method="get" class="p-4">
+            @csrf
+            <div class="row justify-content-baseline">
+                <div class="form-group bmd-form-group col-md-4">
+                    <label class="bmd-label-static">Date From</label>
+                    <input name="dateFrom" id="dateFrom" type="date" class="form-control">
+                </div>
+                <div class="form-group bmd-form-group col-md-4">
+                    <label class="bmd-label-static">Date To</label>
+                    <input name="dateTo" type="date" id="dateTo" class="form-control">
+                </div>
+                <div class="col-md-2 text-center pt-3">
+                    <button type="submit" style="width:80%" class="btn btn-lg btn-primary">Filter</button>
+                </div>
+                <div class="col-md-2 text-center pt-3">
+                    <a class="btn btn-lg btn-primary" style="width:80%" href="{{route('trialbalance')}}">Reset</a>
+                </div>
+            </div>
+        </form>
+        <!-- Filter From End -->
+            </div>
         </div>
     </section>
     <!-- Summary Modal Start -->
@@ -54,14 +77,14 @@ $grand_credit = 0;
                         ?>
                     @foreach($the_ledgers as $ledgers)
                     <?php
-                            $total_debit += $ledgers->journal_transactions->sum('debit')/100;
-                            $total_credit += $ledgers->journal_transactions->sum('credit')/100;
+                            $total_debit += $ledgers->journal_transactions()->where($conditions)->get()->sum('debit')/100;
+                            $total_credit += $ledgers->journal_transactions()->where($conditions)->get()->sum('credit')/100;
                             $balance_total += $ledgers->getCurrentBalanceInDollars();
                         ?>
                         <tr>
                             <td>{{$ledgers->name}}</td>
-                            <td>{{$ledgers->journal_transactions->sum('debit')/100}}</td>
-                            <td>{{$ledgers->journal_transactions->sum('credit')/100}}</td>
+                            <td>{{$ledgers->journal_transactions()->where($conditions)->get()->sum('debit')/100}}</td>
+                            <td>{{$ledgers->journal_transactions()->where($conditions)->get()->sum('credit')/100}}</td>
                             <td>{{$ledgers->getCurrentBalanceInDollars()}}</td>
                         </tr>
                         @endforeach
@@ -112,7 +135,7 @@ $grand_credit = 0;
                             $total_credit = 0;
                             $total_debit = 0;
                         ?>
-                    @foreach ($ledgers->journal_transactions as $item)
+                    @foreach ($ledgers->journal_transactions()->where($conditions)->get() as $item)
                     <?php
                     $item_credit = removeTwoZeroes($item->credit) ?? 0;
                     $item_debit = removeTwoZeroes($item->debit) ?? 0;
@@ -170,5 +193,43 @@ $grand_credit = 0;
         ]
     });
     });
+        // Filter Setting DateFrom and To Start
+        const queryString = window.location.search;
+    const parameters = new URLSearchParams(queryString);
+    if (parameters.get('dateFrom') != null) {
+        document.getElementById('dateFrom').setAttribute('value', parameters.get('dateFrom'));
+    }
+    if (parameters.get('dateTo') != null) {
+        document.getElementById('dateTo').setAttribute('value', parameters.get('dateTo'));
+    }
+
+    $("#filterForm").submit(function(e) {
+        e.preventDefault();
+        let submitForm = true;
+        let dateFrom = $("#dateFrom").val();
+        let dateTo = $("#dateTo").val();
+        dateFrom = dateFrom != "" ? new Date(dateFrom).getTime() : null;
+        dateTo = dateTo != "" ? new Date(dateTo).getTime() : null;
+
+        if (dateFrom != null && dateTo != null) {
+            submitForm = dateFrom <= dateTo;
+        }
+
+        if (submitForm) {
+            $(this)[0].submit();
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Invalid Date Selection !',
+            }).then(function() {
+                $("#dateFrom").val("");
+                $("#dateTo").val("");
+            });
+        }
+
+    });
+    // Filter Setting DateFrom and To End
+
 </script>
 @endpush

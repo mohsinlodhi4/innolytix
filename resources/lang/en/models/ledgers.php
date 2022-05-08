@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'singular' => 'Ledgers',
+  'singular' => 'Ledger',
   'plural' => 'Ledgers',
   'fields' => 
   array (
