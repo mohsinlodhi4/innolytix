@@ -1,8 +1,8 @@
 <?php
 
 return array (
-  'singular' => 'Reciptvoucher',
-  'plural' => 'Reciptvouchers',
+  'singular' => 'Receipt Voucher',
+  'plural' => 'Receipt Vouchers',
   'fields' => 
   array (
     'id' => 'Id',

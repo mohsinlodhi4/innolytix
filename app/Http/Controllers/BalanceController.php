@@ -9,6 +9,6 @@ class BalanceController extends Controller
 {
     public function trialbalance(){
         $the_ledgers = Ledger::get();
-        return view('balance_sheets.trialbalance',compact('the_ledgers'));
+        return view('reports.trialbalance',compact('the_ledgers'));
     }
 }

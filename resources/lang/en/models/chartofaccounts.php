@@ -1,8 +1,8 @@
 <?php
 
 return array (
-  'singular' => 'Chartofaccounts',
-  'plural' => 'Chartofaccounts',
+  'singular' => 'Chart of Accounts',
+  'plural' => 'Chart of Accounts',
   'fields' => 
   array (
     'id' => 'Id',

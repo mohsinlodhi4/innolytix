@@ -238,6 +238,25 @@ if($isinvoicescreate||$isinvoiceproduct){
 </li>
 @endcan
 
+<!-- Reports -->
+<li class="nav-item">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-file"></i>
+        <p>
+            Reports
+            <i class="fas fa-angle-left right"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview" style="margin-left: 20px;">
+        <li class="nav-item">
+            <a href="{{ route('trialbalance') }}" class="nav-link {{ $isinvoicesActive ? 'active' : '' }}">
+                <i class="nav-icon fas fa-file"></i>
+                <p>Trial Balance</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
 <li class="nav-item">
     <a href="{{ route('vendors.index') }}"
        class="nav-link {{ Request::is('vendors*') ? 'active' : '' }}">
@@ -329,12 +348,6 @@ if($isinvoicescreate||$isinvoiceproduct){
     </a>
 </li>
 
-<li class="nav-item">
-    <a href="{{ route('trialbalance') }}"
-       class="nav-link {{ Request::is('ledgers*') ? 'active' : '' }}">
-        <p>Trial Balance</p>
-    </a>
-</li>
 <li class="nav-item">
     <a href="{{ route('ledgers.index') }}"
        class="nav-link {{ Request::is('ledgers*') ? 'active' : '' }}">
