@@ -21,8 +21,8 @@ Auth::routes();
 Route::get('/', function () {
     return redirect(route('dashboard'));
 })->name('home');
-Route::get('/getsubaccounts/{id}','App\Http\Controllers\ChartofaccountsController@getsubaccounts');
-Route::get('/getaccountledger/{id}','App\Http\Controllers\ChartofaccountsController@getaccountledger');
+Route::get('/getsubaccounts/{id}','App\Http\Controllers\ChartofaccountsController@getsubaccounts')->name('getsubaccounts');
+Route::get('/getaccountledger/{id}','App\Http\Controllers\ChartofaccountsController@getaccountledger')->name('getaccountledger');
 
 Route::get('/checkOnline', function (App\Repositories\AttendanceRepository $attendanceRepo) {
     if (Auth::check()) { }

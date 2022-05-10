@@ -133,7 +133,8 @@
             var id=$(this).attr('data-id');
             var html='';
             $("#dynamicTable").html('');
-             $.get("/getsubaccounts/"+id,
+            //  $.get("/getsubaccounts/"+id,
+             $.get("{{URL::to('/getsubaccounts/')}}/"+id,
                  function (data, textStatus, jqXHR) {
 
                      $.each(data, function (indexInArray, valueOfElement) {
@@ -149,7 +150,8 @@
             var html='';
             $("#dynamicledgerTable").html('');
 
-             $.get("/getaccountledger/"+id,
+            //  $.get("/getaccountledger/"+id,
+            $.get("{{URL::to('/getaccountledger/')}}/"+id,
                  function (data, textStatus, jqXHR) {
                         $("#dynamicledgerTable").append(data);
 
