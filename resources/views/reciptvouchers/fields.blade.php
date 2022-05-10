@@ -3,7 +3,7 @@
     {!! Form::label('bank_account', __('models/reciptvouchers.fields.bank_account').':') !!}
     <select name="bank_account" id="" class="form-control">
         @foreach ($bank as $item)
-            <option value="{{$item->id}}">{{$item->name}}</option>
+            <option value="{{$item->id}}">{{$item->bank ? $item->bank->bank_name .' - '.$item->bank->account_no : $item->name }}</option>
         @endforeach
     </select>
     {{-- {!! Form::text('bank_account', null, ['class' => 'form-control']) !!} --}}
