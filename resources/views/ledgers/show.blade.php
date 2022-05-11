@@ -38,16 +38,16 @@
                         ?>
                     @foreach ($ledgers->journal_transactions as $item)
                     <?php
-                    $total_credit += $item->credit ?? 0;
-                    $total_debit += $item->debit ?? 0;
+                    $total_credit += removeTwoZeroes($item->credit) ?? 0;
+                    $total_debit += removeTwoZeroes($item->debit) ?? 0;
 
                     ?>
                         <tr>
                             <td>{{$item->post_date?$item->post_date:''}}</td>
                             <td>{{$item->journal->ledger->name?$item->journal->ledger->name:''}}</td>
                             <td>{{$item->memo?$item->memo:''}}</td>
-                            <td>{{$item->debit?$item->debit:''}}</td>
-                            <td>{{$item->credit?$item->credit:''}}</td>
+                            <td>{{$item->debit? removeTwoZeroes($item->debit):''}}</td>
+                            <td>{{$item->credit? removeTwoZeroes($item->credit):''}}</td>
                             {{-- <td>{{$item->journal->balance?$item->journal->balance:''}}</td> --}}
                         </tr>
                         @endforeach
