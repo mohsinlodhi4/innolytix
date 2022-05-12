@@ -14,13 +14,12 @@ $grand_credit = 0;
                     </h4>
                 </div>
                 <div class="col-sm-6">
-                    <!-- <a class="btn btn-primary float-right"
-                       href="{{ route('chartofaccounts.create') }}">
-                         View Summary
-                    </a> -->
                     <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#summaryModal">
+                        View Heads Summary
+                    </button> 
+                    <!-- <button type="button" class="btn btn-primary float-right mr-2" data-toggle="modal" data-target="#summaryModal2">
                         View Summary
-                    </button>
+                    </button> -->
                 </div>
             </div>
             <div class="row p-2 mt-2">
@@ -54,7 +53,7 @@ $grand_credit = 0;
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="summaryModal">Trial Balance Summary</h5>
+                <h5 class="modal-title" id="summaryModal">Trial Balance Heads Summary</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -104,6 +103,62 @@ $grand_credit = 0;
         </div>
     </div>
     <!-- Summary Modal End -->
+    <!-- Summary Modal 2 Start -->
+    <div class="modal fade" id="summaryModal2" tabindex="-1" role="dialog" aria-labelledby="summaryModal2" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="summaryModal2">Trial Balance Summary</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Post Date</th>
+                            <th>Account</th>
+                            <th>Debit </th>
+                            <th>Credit</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                            $total_debit = 0;
+                            $total_credit = 0;
+                            $balance_total = 0;
+                        ?>
+                    @foreach($the_ledgers as $ledgers)
+                    <?php
+                            $total_debit += $ledgers->journal_transactions()->where($conditions)->get()->sum('debit')/100;
+                            $total_credit += $ledgers->journal_transactions()->where($conditions)->get()->sum('credit')/100;
+                            $balance_total += $ledgers->getCurrentBalanceInDollars();
+                        ?>
+                        <tr>
+                            <td>{{$ledgers->name}}</td>
+                            <td>{{$ledgers->journal_transactions()->where($conditions)->get()->sum('debit')/100}}</td>
+                            <td>{{$ledgers->journal_transactions()->where($conditions)->get()->sum('credit')/100}}</td>
+                            <td>{{$ledgers->getCurrentBalanceInDollars()}}</td>
+                        </tr>
+                        @endforeach
+                        <tr>
+                            <td> <h3>Total </h3> </td>
+                            <td>{{$total_debit}}</td>
+                            <td>{{$total_credit}}</td>
+                            <td>{{$balance_total}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- Summary Modal 2 End -->
     <br>
 @foreach($the_ledgers as $ledgers)
 <section class="content-header">

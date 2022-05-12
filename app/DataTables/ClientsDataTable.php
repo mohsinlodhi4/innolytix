@@ -19,7 +19,9 @@ class ClientsDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'clients.datatables_actions');
+        return $dataTable->addColumn('action', 'clients.datatables_actions')->editColumn('created_at',function($data){
+            return optional($data->created_at)->toDateString() ? $data->created_at->toDateString() : $data->created_at;
+        });
     }
 
     /**
@@ -89,6 +91,7 @@ class ClientsDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            'created_at' => new Column(['title' => __('models/clients.fields.created_at'), 'data' => 'created_at']),
             'name' => new Column(['title' => __('models/clients.fields.name'), 'data' => 'name']),
             'phone' => new Column(['title' => __('models/clients.fields.phone'), 'data' => 'phone']),
             'ntn_no' => new Column(['title' => __('models/clients.fields.ntn_no'), 'data' => 'ntn_no']),

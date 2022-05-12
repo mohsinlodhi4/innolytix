@@ -36,7 +36,8 @@ class AccountsHead extends Model
         'code',
         'type',
         'parent_id',
-        'has_parent'
+        'has_parent',
+        'ledger_id'
     ];
 
     /**
