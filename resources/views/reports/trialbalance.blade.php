@@ -17,9 +17,9 @@ $grand_credit = 0;
                     <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#summaryModal">
                         View Heads Summary
                     </button> 
-                    <!-- <button type="button" class="btn btn-primary float-right mr-2" data-toggle="modal" data-target="#summaryModal2">
+                    <button type="button" class="btn btn-primary float-right mr-2" data-toggle="modal" data-target="#summaryModal2">
                         View Summary
-                    </button> -->
+                    </button>
                 </div>
             </div>
             <div class="row p-2 mt-2">
@@ -117,7 +117,6 @@ $grand_credit = 0;
             <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Post Date</th>
                             <th>Account</th>
                             <th>Debit </th>
                             <th>Credit</th>
@@ -130,17 +129,20 @@ $grand_credit = 0;
                             $total_credit = 0;
                             $balance_total = 0;
                         ?>
-                    @foreach($the_ledgers as $ledgers)
+                    @foreach($summary as $s)
                     <?php
-                            $total_debit += $ledgers->journal_transactions()->where($conditions)->get()->sum('debit')/100;
-                            $total_credit += $ledgers->journal_transactions()->where($conditions)->get()->sum('credit')/100;
-                            $balance_total += $ledgers->getCurrentBalanceInDollars();
+                            $debit = $s->debit ? $s->debit/100 : 0 ;
+                            $credit = $s->credit ? $s->credit/100 : 0;
+                            $balance=$debit - $credit;
+                            $total_debit += $debit;
+                            $total_credit += $credit;
+                            $balance_total += $balance;
                         ?>
                         <tr>
-                            <td>{{$ledgers->name}}</td>
-                            <td>{{$ledgers->journal_transactions()->where($conditions)->get()->sum('debit')/100}}</td>
-                            <td>{{$ledgers->journal_transactions()->where($conditions)->get()->sum('credit')/100}}</td>
-                            <td>{{$ledgers->getCurrentBalanceInDollars()}}</td>
+                            <td>{{$s->name}}</td>
+                            <td>{{$debit}}</td>
+                            <td>{{$credit}}</td>
+                            <td>{{$balance}}</td>
                         </tr>
                         @endforeach
                         <tr>

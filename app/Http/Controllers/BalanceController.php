@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Scottlaurent\Accounting\Models\Ledger;
+use DB;
 
 class BalanceController extends Controller
 {
@@ -21,6 +22,11 @@ class BalanceController extends Controller
         }
 
         $the_ledgers = Ledger::get();
-        return view('reports.trialbalance',compact('the_ledgers', 'conditions'));
+        
+        $summary = DB::table('accounting_journal_transactions as ajt')->join('accounting_journals as aj','ajt.journal_id','=','aj.id')
+        ->join('accounts as a','aj.morphed_id','=','a.id')->groupBy('a.name')
+        ->select(DB::raw('a.name, sum(ajt.debit) as debit, sum(ajt.credit) as credit'))->get();
+        
+        return view('reports.trialbalance',compact('the_ledgers', 'conditions','summary'));
     }
 }
