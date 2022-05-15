@@ -410,7 +410,7 @@
 
                     <table style="width: 100%" class="table inventory">
                         <tr>
-                            <td style=" !important; text-align:center;" colspan="2">
+                            <td style=" !important; text-align:center;" colspan="4">
                                 <span style="text-align:center; font-weight:bold; font-size:25px;">Bank Payment Voucher</span>
                             </td>
                         </tr>
@@ -418,30 +418,52 @@
                             <td  style="border:none;" colspan="2"></td>
                         </tr>
                         <tr>
-                            <td style="border: none !important;">
-                                <!-- <span>Serial No: </span><span style="text-decoration: underline; text-align:right; ">{{@$quotations['date']}}</span><br> -->
-                                <span>Ref: </span><span style="text-decoration: underline; text-align:right; ">{{@$pay->ref}}</span><br>
-                                <span>Date: </span><span style="text-decoration: underline; text-align:right; ">{{@$pay->created_at->toDateString()}}</span><br>
-
+                        <td>
+                                <strong>Date : </strong><span>{{@$pay->created_at->toDateString()}}</span> 
                             </td>
-                            <td style="border: none !important; text-align:right">
-                                <span>Entry Date: </span><span style="text-decoration: underline; text-align:right; ">{{@$pay->created_at->toDateString()}}</span><br>
+                            <td>
+                                <strong>Period : </strong><span>{{createPeriod(@$pay->created_at->toDateString())}}</span> 
+                            </td>
+                            <td>
+                                <strong>Cash/Chq # </strong><span>{{@$pay->cheque_ref}}</span>
+                            </td>
+                            <td>
+                                <strong>PV # </strong><span>{{$pay->id}}</span>
                             </td>
                         </tr>
                         <tr>
-                            <td style="border: none !important;">
-                                <!-- <span>Serial No: </span><span style="text-decoration: underline; text-align:right; ">{{@$quotations['date']}}</span><br> -->
-                                <span>Bank Code: </span><span style="text-decoration: underline; text-align:right; ">{{@$pay->bank->account_no}}</span><br>
-                                <span>Bank Title: </span><span style="text-decoration: underline; text-align:right; ">{{@$pay->bank->bank_name}}</span><br>
-
+                            <td style="border-top:none;border-bottom:none; text-align:center">
+                                <strong>Bank Title: </strong>
                             </td>
-                            <td style="border: none !important; text-align:right">
+                            <td colspan="2" style="border-top:none;border-bottom:none; border-left:none">
+                                <strong>{{@$pay->bank->bank_name}}</strong>
+                            </td>
+                            <!-- <td style="border: none !important; text-align:right">
                             @if($pay->cheque_ref)
                                 <span>Cheque Ref: </span><span style="text-decoration: underline; text-align:right; ">{{@$pay->cheque_ref}}</span><br>
                                 @endif
                                 @if($pay->cheque_date)
                                 <span>Cheque Date: </span><span style="text-decoration: underline; text-align:right; ">{{@$pay->cheque_date}}</span><br>
                                 @endif
+                            </td> -->
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Paid To :</strong>
+                            </td>
+                            <td colspan="2">
+                                {{$pay->bank->account_title}}
+                            </td>
+                            <td>
+                            <span>Ref: </span><span>{{@$pay->ref}}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border-top:none;" >
+                                <strong>Narration: </strong>
+                            </td>
+                            <td colspan="3" style="border-top:none;" >
+                                {{$pay->description != 0 ?$pay->description : ''}}
                             </td>
                         </tr>
                     </table>
@@ -451,22 +473,20 @@
                       <table class="inventory">
                           <thead>
                               <tr>
-                                  <th style="width:20% !important"><span>Account Code</span></th>
-                                  <th style="width:15% !important"><span>Title Account</span></th>
-                                  <th style="width:45% !important"><span>Narration</span></th>
-                                  <th style="width:10% !important"><span>Cost (Center)</span></th>
-                                  <th style="width:15% !important"><span>Debit (PKR)</span></th>
-                                  <th style="width:15% !important"><span>Credit (PKR)</span></th>
+                                  <th><span>Account Code</span></th>
+                                  <th><span>Head of Account</span></th>
+                                  <th><span>Cost (Center)</span></th>
+                                  <th><span>Project Code</span></th>
+                                  <th><span>Amount</span></th>
                               </tr>
                           </thead>
                           <tbody>
                               <tr>
                                   <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;">{{$pay->account->name}}</td>
-                                  <td  style="text-align:center;">{{$pay->description != 0 ?$pay->description : ''}}</td>
+                                  <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;">{{$pay->amount}}</td>
-                                  <td  style="text-align:center;"></td>
                               </tr>
                               
                               @foreach($pay->taxes as $t)
@@ -476,27 +496,17 @@
                               <tr>
                                   <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;">{{$t->tax->title." ".$t->tax->percent."%"}}</td>
-                                  <td  style="text-align:center;">{{$pay->description}}</td>
+                                  <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;">{{$tax_amount}}</td>
-                                  <td  style="text-align:center;"></td>
                               </tr>
 
                               @endforeach
-                              <tr>
-                                  <td  style="text-align:center;">{{$pay->bank->account_no}}</td>
-                                  <td  style="text-align:center;">{{$pay->bank->bank_name.' - '.$pay->bank->account_title}}</td>
-                                  <td  style="text-align:center;"></td>
-                                  <td  style="text-align:center;"></td>
-                                  <td  style="text-align:center;"></td>
-                                  <td  style="text-align:center;">{{$pay->grand_total}}</td>
-                              </tr>
+                              
                               <tr style="margin-top:15px">
                                   <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;"></td>
-                                  <td  style="text-align:center;">Total</td>
-                                  <td  style="text-align:center;"></td>
-                                  <td  style="text-align:center;">{{$pay->grand_total}}</td>
+                                  <td colspan="2" style="text-align:center;">Total</td>
                                   <td  style="text-align:center;">{{$pay->grand_total}}</td>
                               </tr>
                           </tbody>
@@ -615,9 +625,6 @@
     /* Shivving (IE8 is not supported, but at least it won't look as awful)
 /* ========================================================================== */
 
-function printMe(){
-    window.print();
-}
     (function(document) {
         var
             head = document.head = document.getElementsByTagName('head')[0] || document.documentElement,
@@ -683,20 +690,6 @@ function printMe(){
 
     /* Helper Functions
     /* ========================================================================== */
-
-
-    $(document).ready(function() {
-        $('#print').click(function() {
-            console.log("123")
-            window.print();
-        })
-    });
-    document.getElementById("print").click(()=>{
-        console.log("123")
-        window.print();
-    })
-
-
 
     function generateTableRow() {
         var emptyColumn = document.createElement('tr');

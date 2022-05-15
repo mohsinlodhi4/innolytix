@@ -72,3 +72,8 @@ function amountInWords(float $amount)
    " . $change_words[$amount_after_decimal % 10]) . ' Paise' : '';
    return ($implode_to_Rupees ? $implode_to_Rupees . 'Rupees ' : '') . $get_paise;
 }
+
+function createPeriod($date){
+    $arr = explode('-',$date);
+    return $arr[0].'/'.$arr[1];
+}
