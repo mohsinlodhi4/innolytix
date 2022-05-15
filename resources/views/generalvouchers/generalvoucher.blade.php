@@ -443,37 +443,41 @@
                                   <th><span>Particulars</span></th>
                                   <th><span>Cost Center</span></th>
                                   <th><span>Project Code</span></th>
-                                  <th><span>Debit (PKR)</span></th>
-                                  <th><span>Credit (PKR)</span></th>
+                                @if($pay->the_debit_account) <th><span>Debit (PKR)</span></th> @endif
+                                @if($pay->the_credit_account) <th><span>Credit (PKR)</span></th> @endif
                               </tr>
                           </thead>
                           <tbody>
+                              @if($pay->the_credit_account)
                               <tr>
-                                  <td  style="text-align:center;">{{$pay->the_credit_account->id}}</td>
-                                  <td  style="text-align:center;">{{$pay->the_credit_account->name}}</td>
-                                  <td  style="text-align:center;"></td>
-                                  <td  style="text-align:center;"></td>
+                                  <td  style="text-align:center;">{{$pay->the_credit_account->id ?? ''}}</td>
+                                  <td  style="text-align:center;">{{$pay->the_credit_account->name ?? ''}}</td>
                                   <td  style="text-align:center;">{{$pay->description != 0 ?$pay->description : ''}}</td>
                                   <td  style="text-align:center;"></td>
-                                  <td  style="text-align:center;">{{$pay->amount}}</td>
+                                  <td  style="text-align:center;"></td>
+                                  @if($pay->the_debit_account) <td  style="text-align:center;"></td> @endif
+                                  @if($pay->the_credit_account)<td  style="text-align:center;">{{$pay->amount}}</td>@endif
                               </tr>
+                              @endif
+                              @if($pay->the_debit_account)
                               <tr>
-                                  <td  style="text-align:center;">{{$pay->the_debit_account->id}}</td>
-                                  <td  style="text-align:center;">{{$pay->the_debit_account->name}}</td>
+                                  <td  style="text-align:center;">{{$pay->the_debit_account->id ?? ''}}</td>
+                                  <td  style="text-align:center;">{{$pay->the_debit_account->name ?? ''}}</td>
                                   <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;">{{$pay->amount}}</td>
-                                  <td  style="text-align:center;"></td>
+                                  @if($pay->the_credit_account)<td  style="text-align:center;"></td>@endif
                               </tr>
+                              @endif
                               <tr style="margin-top:15px; background:lightgray; font-weight:bold">
                                   <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;"></td>
                                   <td  style="text-align:center;">Total</td>
-                                  <td  style="text-align:center;">{{$pay->amount}}</td>
-                                  <td  style="text-align:center;">{{$pay->amount}}</td>
+                                  @if($pay->the_debit_account)<td  style="text-align:center;">{{$pay->the_debit_account ? $pay->amount : 0}}</td>@endif
+                                  @if($pay->the_credit_account)<td  style="text-align:center;">{{$pay->the_credit_account ? $pay->amount : 0}}</td>@endif
                               </tr>
                           </tbody>
                           <?php
@@ -487,7 +491,7 @@
                   <!-- <table class="inventory">
                           <tbody>
                               <tr>
-                                  <td  style="text-align:center; padding: 5px;">{{$pay->the_credit_account->id}}</td>
+                                  <td  style="text-align:center; padding: 5px;">{{$pay->the_credit_account->id ?? ''}}</td>
                                   <td  style="text-align:center;width:70%">{{amountInWords($pay->amount)}}</td>
                                   <td  style="text-align:center;">{{$pay->amount}}</td>
                               </tr>

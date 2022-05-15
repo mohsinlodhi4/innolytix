@@ -63,20 +63,30 @@ class GeneralvoucherController extends AppBaseController
     public function store(CreateGeneralvoucherRequest $request)
     {
         $input = $request->all();
+        if($input['c_coa_account'] && $input['d_coa_account']){
+            $caccount=Account::find($input['c_coa_account']);
+            $Daccount=Account::find($input['d_coa_account']);
+            $transaction_group = AccountingService::newDoubleEntryTransactionGroup();
+            $transaction_group->addDollarTransaction($Daccount->journal, 'debit', $input['amount'],$input['description']);
+            $transaction_group->addDollarTransaction($caccount->journal, 'credit', $input['amount'],$input['description']);
+            $transaction_group_uuid = $transaction_group->commit();
+            
+            $input['credit_account'] = $input['c_coa_account'];
+            $input['dabit_account'] = $input['d_coa_account'];
+        }elseif($input['c_coa_account']){
+            $caccount=Account::find($input['c_coa_account']);
+            $caccount->journal->creditDollars($input['amount']);
+            $input['credit_account'] = $input['c_coa_account'];
+        }elseif( $input['d_coa_account']){
+            $Daccount=Account::find($input['d_coa_account']);
+            $Daccount->journal->debitDollars($input['amount']);
+            $input['dabit_account'] = $input['d_coa_account'];
+        }else{
+            return false;
+        }
         
-        $caccount=Account::find($input['c_coa_account']);
-        // $bank=Banks::find($input['bank_account']);
-        $Daccount=Account::find($input['d_coa_account']);
-        $transaction_group = AccountingService::newDoubleEntryTransactionGroup();
-        $transaction_group->addDollarTransaction($Daccount->journal, 'debit', $input['amount'],$input['description']);
-        $transaction_group->addDollarTransaction($caccount->journal, 'credit', $input['amount'],$input['description']);
-        $transaction_group_uuid = $transaction_group->commit();
         $input['created_by']=Auth::id();
-
         $input['ref'] = random_strings()."/".date('m/d');
-
-        $input['credit_account'] = $input['c_coa_account'];
-        $input['dabit_account'] = $input['d_coa_account'];
 
         $generalvoucher = $this->generalvoucherRepository->create($input);
 
